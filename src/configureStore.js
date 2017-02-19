@@ -1,15 +1,19 @@
-import { createStore } from 'redux'
+import { createStore, compose } from 'redux'
 import rootReducer from './reducers'
-//import actions from './actions'
+import { firebase as fbConfig } from './config'
+import { reactReduxFirebase } from 'react-redux-firebase'
 
+export default function configureStore (initialState, history) {
+  const createStoreWithMiddleware = compose(
+    reactReduxFirebase(fbConfig,
+      {
+        userProfile: 'users',
+        enableLogging: false
+      }
+    ),
+    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+  )(createStore)
+  const store = createStoreWithMiddleware(rootReducer);
 
-
-export default function configureStore(preloadedState) {
-	const store = createStore(
-		rootReducer,
-		preloadedState
-	)
-	//store.dispatch(actions.setSearchType(true))
-
-	return store;
+  return store;
 }

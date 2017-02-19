@@ -1,15 +1,8 @@
-import initialState from './state'
+import { combineReducers } from 'redux'
+import { firebaseStateReducer as firebase } from 'react-redux-firebase'
 
-function rootReducer(state = initialState, action) {
-	switch(action.type) {
-		case 'searchText':
-			return Object.assign({}, state, {
-				searchText: action.value,
-				searchTextError: '',
-			})
-		default:
-			return state
-	}
-}
+const rootReducer = combineReducers({
+  firebase
+})
 
 export default rootReducer

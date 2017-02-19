@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react'
+import SpellList from '../components/Spells/SpellList'
 
-export default class App extends React.Component {
-  render() {
+export default class App extends Component {
+  render () {
     return (
-      <div>
-        <h1>It Works!</h1>
-        <p>This React project just works including <span className="redBg">module</span> local styles.</p>
-        <p>Enjoy!</p>
+      <div className='App'>
+        <SpellList />
       </div>
     )
   }
