@@ -14,27 +14,44 @@ class SpellList extends Component {
     })
   }
 
+  constructor() {
+    super();
+    // Load all in default state
+    this.state = {
+      search: ''
+    }
+  }
+
+  updateSearch(e) {
+    this.setState({ search: e.target.value });
+  }
+
   render () {
     const { spells } = this.props
+    const { search } = this.state
 
     const spellList = (!isLoaded(spells))
                         ? 'Loading...'
                         : (isEmpty(spells))
                           ? 'No spells found'
-                          : Object.keys(spells).map((key) => (
-                            <Spell key={key} id={key} spell={spells[key]} />
-                          ))
+                          : spells
+                            .filter(spell => spell.name.toLowerCase().indexOf(search.toLowerCase()) > -1)
+                            .map((spell, key) => <Spell key={key} spell={spell} />)
     return (
-      <ul className='spell-list'>
-        {spellList}
-      </ul>
+      <div>
+        <input type="text" onChange={(e) => this.updateSearch(e) } />
+        <ul className='spell-list'>
+          {spellList}
+        </ul>
+      </div>
     )
   }
 }
 
-const fbWrappedComponent = firebaseConnect([
-  { type: 'once', path: 'spells', populates: [{ child: 'collaborators', root: 'users' }] }
-])(SpellList)
+const fbWrappedComponent = firebaseConnect([{
+  path: 'spells',
+  populates: [{ child: 'collaborators', root: 'users' }]
+}])(SpellList)
 
 export default connect(
   ({ firebase }) => ({
